@@ -13,14 +13,13 @@
  */
 package zipkin.reporter.kafka010;
 
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.charithe.kafka.KafkaJunitRule;
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-import kafka.serializer.DefaultDecoder;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,8 +31,12 @@ import zipkin.TestObjects;
 import zipkin.reporter.Encoder;
 import zipkin.reporter.internal.AwaitableCallback;
 
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 public class KafkaSenderTest {
 
@@ -103,11 +106,15 @@ public class KafkaSenderTest {
     callback.await();
   }
 
-  private List<byte[]> readMessages(String topic) throws TimeoutException {
-    return kafka.readMessages(topic, 1, new DefaultDecoder(kafka.consumerConfig().props()));
+  private List<byte[]> readMessages(String topic) throws TimeoutException, InterruptedException, ExecutionException {
+    List<ConsumerRecord<byte[], byte[]>> records = kafka.pollMessages(topic, 1,
+        new ByteArrayDeserializer(), new ByteArrayDeserializer()).get();
+    return records.stream()
+            .map(r -> r.value())
+            .collect(toList());
   }
 
-  private List<byte[]> readMessages() throws TimeoutException {
+  private List<byte[]> readMessages() throws TimeoutException, InterruptedException, ExecutionException {
     return readMessages("zipkin");
   }
 }

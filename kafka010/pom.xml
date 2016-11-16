@@ -38,8 +38,7 @@
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.11</artifactId>
-      <!-- This is pinned to Kafka 0.8.x client as 0.9.x brokers work with them, but not visa-versa
-     http://docs.confluent.io/2.0.0/upgrade.html -->
+      <!-- see http://docs.confluent.io/2.0.0/upgrade.html about special compatibility requirements across deps.-->
       <version>0.10.0.0</version>
       <!-- don't eagerly bind slf4j -->
       <exclusions>
@@ -47,14 +46,20 @@
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-log4j12</artifactId>
         </exclusion>
+        <!--
+        <exclusion>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId></artifactId>
+        </exclusion>
+        -->
       </exclusions>
     </dependency>
 
     <dependency>
       <groupId>com.github.charithe</groupId>
       <artifactId>kafka-junit</artifactId>
-      <!-- pinned to 0.8.2.2 -->
-      <version>1.7</version>
+      <!-- pinned to 0.10.0 -->
+      <version>2.4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
