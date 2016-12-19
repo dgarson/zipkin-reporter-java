@@ -39,7 +39,7 @@
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.11</artifactId>
       <!-- see http://docs.confluent.io/2.0.0/upgrade.html about special compatibility requirements across deps.-->
-      <version>0.10.0.0</version>
+      <version>0.10.0.1</version>
       <!-- don't eagerly bind slf4j -->
       <exclusions>
         <exclusion>

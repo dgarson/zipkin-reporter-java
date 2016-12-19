@@ -23,14 +23,13 @@ import zipkin.reporter.Callback;
 import zipkin.reporter.Encoding;
 import zipkin.reporter.Sender;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.annotation.Nonnull;
 
 /**
  * This sends (usually TBinaryProtocol big-endian) encoded spans to a Kafka topic.
@@ -176,7 +175,6 @@ public class KafkaSender extends LazyCloseable<KafkaProducer<byte[], byte[]>> im
     /**
      * Creates a Zipkin KafkaProducer with the given server set, using entirely default configuration properties.
      * @param bootstrapServers the bootstrap server list
-     * @return
      */
     @Nonnull
     public static KafkaSender create(@Nonnull String bootstrapServers) {
